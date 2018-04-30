@@ -16,6 +16,7 @@
   "bugs": {
     "url": "https://github.com/theflyingape/bidmc-its-xterm/issues"
   },
+  "homepage": "https://xterm-dev.bidmc.harvard.edu/xterm/its@watson/",
   "engines": {
     "node": ">=8.9"
   },
