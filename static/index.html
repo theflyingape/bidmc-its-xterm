@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<title>BIDMC ITS xterm.js service</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="application-name" content="ssh">
+<meta name="apple-mobile-web-app-title" content="ssh">
+<!--meta name="msapplication-starturl" content="https://cassiopeia.bidmc.harvard.edu/"-->
+<style type='text/css'>
+  body {
+    color: white;
+    margin:  0px;
+    border: none;
+  }
+  #terminal {
+    border: 0;
+    top: 0px; left: 0px;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+  }
+  a:link, a:visited {
+    background-color: #0f1e3c;
+    color: #eca;
+    text-decoration: none;
+    display: inline-block;
+  }
+  a:hover, a:active {
+    background-color: #112244;
+    color: #ace;
+  }
+</style>
+<link rel="stylesheet" href="xterm.css" />
+</head>
+<body bgColor="#010208">
+<div id="terminal"></div>
+<div id="wall" hidden=true></div>
+</body>
+<script src="./bundle.js"></script>
+</html>

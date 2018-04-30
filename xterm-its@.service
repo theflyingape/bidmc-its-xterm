@@ -1,0 +1,18 @@
+[Unit]
+Description=xterm-%i client via web
+After=local-fs.target network-online.target
+
+[Service]
+Type=simple
+#User=root
+#Group=wheel
+#Environment=TERM=xterm-256color
+ExecStart=/opt/rh/rh-nodejs8/root/usr/bin/node bidmc-its-xterm-app.js its@%i
+KillMode=process
+SyslogIdentifier=xterm-%i
+WorkingDirectory=/opt/xterm
+#TasksMax=200
+
+[Install]
+WantedBy=multi-user.target
+

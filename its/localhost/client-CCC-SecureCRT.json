@@ -1,0 +1,17 @@
+{
+    "title": "CCC Classic", "bgColor": "#006868",
+    "rows": 25, "cols": 80, "enableBold": true, "scrollback": 250,
+    "fontFamily": "Lucida Console,Consolas,monospace",
+    "theme": { "foreground": "#d0d0d0", "background": "#008080",
+        "black": "#000000", "white": "#c8c8c8",
+	"red": "#c00000", "green": "#00c000", "yellow": "#c8c000",
+	"blue": "#0000c0", "magenta": "#c000c0", "cyan": "#00c0c0",
+        "brightBlack": "#606060", "brightWhite": "#fafafa",
+	"brightRed": "#fa0000", "brightGreen": "#00fa00", "brightYellow": "#fafa00",
+	"brightBlue": "#0000fa", "brightMagenta": "#fa00fa", "brightCyan": "#00fafa"
+    },
+    "keymap": [
+	{ "keyCode": 8, "shiftKey": false, "mapCode": 8 },
+	{ "keyCode": 8, "shiftKey": true, "mapCode": 127 }
+    ]
+}

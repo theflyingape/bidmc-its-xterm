@@ -1,0 +1,5 @@
+{
+  "cols": 80, "scrollback": 1000,
+  "fontFamily": "Lucida Console,Consolas,monospace", "fontSize": 20,
+  "theme": {  "foreground": "#c1c2c8", "background": "#010204" }
+}

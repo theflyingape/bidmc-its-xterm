@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2016",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": false,
+    "sourceMap": true
+  },
+  "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}
