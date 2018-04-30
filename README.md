@@ -2,8 +2,7 @@
 
 > ## an Apache-NodeJs implementation for web SSH client needs
 
-[![Downloads](https://img.shields.io/npm/dy/dankdomain.svg)](https://www.npmjs.c
-om/package/bidmc-its-xterm)
+[![Downloads](https://img.shields.io/npm/dy/dankdomain.svg)](https://www.npmjs.com/package/bidmc-its-xterm)
 [![GitHub release](https://img.shields.io/github/release/theflyingape/bidmc-its-xterm.svg)](https://github.com/theflyingape/bidmc-its-xterm/releases) [![npm version](https://badge.fury.io/js/bidmc-its-xterm.svg)](https://www.npmjs.com/package/bidmc-its-xterm)
 
 - ./install.sh [rpm]
