@@ -1,6 +1,6 @@
 {
   "name": "bidmc-its-xterm",
-  "version": "2018.04.30",
+  "version": "2018.4.30",
   "description": "BIDMC ITS xterm.js services",
   "main": "app",
   "author": "Robert Hurst",
@@ -9,6 +9,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/theflyingape/bidmc-its-xterm"
+  },
+  "keywords": [
+    "terminal"
+  ],
+  "bugs": {
+    "url": "https://github.com/theflyingape/bidmc-its-xterm/issues"
   },
   "engines": {
     "node": ">=8.9"
