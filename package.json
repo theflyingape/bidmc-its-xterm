@@ -1,6 +1,6 @@
 {
   "name": "bidmc-its-xterm",
-  "version": "2018.04.18",
+  "version": "2018.04.30",
   "description": "BIDMC ITS xterm.js services",
   "main": "app",
   "author": "Robert Hurst",
@@ -8,10 +8,10 @@
   "publisher": "rhurst",
   "repository": {
     "type": "git",
-    "url": "https://git.bidmc.harvard.edu/projects/CAS/repos/server/browse/opt/xterm"
+    "url": "https://github.com/theflyingape/bidmc-its-xterm"
   },
   "engines": {
-    "node": ">=6.11"
+    "node": ">=8.9"
   },
   "scripts": {
     "build": "echo 'run script: ./build.sh or ./build.sh rpm'",
