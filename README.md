@@ -1,4 +1,4 @@
-# ⚕️ BIDMC ITS xterm services
+# ⚕️ BIDMC ITS Xterm.js services 🖥
 
 > ## an Apache-NodeJs implementation for web SSH client needs
 
@@ -15,7 +15,7 @@ browser-side) configuration file.
 
 ## Resources
 
-### [XTerm.js](https://xtermjs.org)
+### [Xterm.js](https://xtermjs.org)
 
 > terminal front-end component written in TypeScript that works in the
 modern-day browser

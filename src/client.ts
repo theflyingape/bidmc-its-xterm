@@ -35,7 +35,8 @@ let params = parseStartup(location.search)
 let cols = params.cols, rows = params.rows, fontSize = params.size
 let startup: client = {
     bellSound: BELL_SOUND, bellStyle: 'sound',
-    cursorBlink: true, fontFamily: 'Consolas,Lucida Console,monospace'
+    cursorBlink: true, fontFamily: 'Consolas,Lucida Console,monospace',
+    experimentalCharAtlas: 'dynamic'
 }
 let options: client = Object.assign({}, startup)
 let pid = 0
@@ -102,7 +103,7 @@ function newSession() {
                 term.open(document.getElementById('terminal'))
                 window.dispatchEvent(new Event('resize'))
 
-                term.writeln('\x1B[0;1mW\x1B[22melcome to BIDMC ITS xterm.js service')
+                term.writeln('\x1B[0;1mW\x1B[22melcome to BIDMC ITS Xterm.js service')
                 term.write(`\x1B[2mConnecting secure WebSocket to ${app} ... `)
 
                 protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://'

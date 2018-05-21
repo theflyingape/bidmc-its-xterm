@@ -1,7 +1,7 @@
-Summary:	BIDMC ITS xterm service
+Summary:	BIDMC ITS Xterm.js service
 Name:		bidmc-its-xterm
 Version:	1.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 
 License:	MIT
 Source0:	xterm.tgz
@@ -61,11 +61,13 @@ echo
 %attr(775,root,wheel) /opt/xterm
 
 %changelog
+* Mon May 21 2018 Robert Hurst <rhurst@bidmc.harvard.edu>
+- upgraded to Xterm 3.4 package
 * Wed Apr 18 2018 Robert Hurst <rhurst@bidmc.harvard.edu>
-- upgraded to XTerm 3.3 package
+- upgraded to Xterm 3.3 package
 - split x-forwarded-for list up from NetScalar passing
 * Mon Mar 12 2018 Robert Hurst <rhurst@bidmc.harvard.edu>
-- upgraded to XTerm 3.2 package
+- upgraded to Xterm 3.2 package
 - RPM spec optimizations
 * Thu Feb  8 2018 Robert Hurst <rhurst@bidmc.harvard.edu>
 - original rpm
