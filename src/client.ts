@@ -110,7 +110,7 @@ function newSession() {
                 socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '')
                     + app + '/session/'
 
-                socketURL += pid
+                socketURL += `?pid=${pid}`
                 socket = new WebSocket(socketURL)
 
                 socket.onopen = () => {

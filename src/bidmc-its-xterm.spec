@@ -1,7 +1,7 @@
 Summary:	BIDMC ITS Xterm.js service
 Name:		bidmc-its-xterm
-Version:	1.0
-Release:	7%{?dist}
+Version:	1.1
+Release:	0%{?dist}
 
 License:	MIT
 Source0:	xterm.tgz
@@ -61,6 +61,10 @@ echo
 %attr(775,root,wheel) /opt/xterm
 
 %changelog
+* Mon Jun 11 2018 Robert Hurst <rhurst@bidmc.harvard.edu>
+- upgraded to Xterm 3.4.1 package
+- removed express-ws (DoS vulnerability), using ws
+- improved logging and process signal handling
 * Mon May 21 2018 Robert Hurst <rhurst@bidmc.harvard.edu>
 - upgraded to Xterm 3.4 package
 * Wed Apr 18 2018 Robert Hurst <rhurst@bidmc.harvard.edu>

@@ -19,7 +19,7 @@ ls -gho ./static/bundle.js
 rm build/*
 
 # make RPM?
-[ "$1" == "rpm" ] || exit
+[ "$1" == "rpm" ] || exit 0
 sudo -v || exit
 which dos2unix > /dev/null && dos2unix src/bidmc-its-xterm.spec
 cp src/bidmc-its-xterm.spec ~/rpmbuild/SPECS/
@@ -36,4 +36,3 @@ sudo tar czvf ~/rpmbuild/SOURCES/xterm.tgz 	\
 cd ~/rpmbuild
 rpmbuild -ba --target=noarch SPECS/bidmc-its-xterm.spec
 cd -
-

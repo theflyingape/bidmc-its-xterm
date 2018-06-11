@@ -1,25 +1,23 @@
-  /*****************************************************************************\
+/*****************************************************************************\
  *  BIDMC ITS Secure SHell for Chrome/Edge/Firefox                           *
  *  app.ts authored by: Robert Hurst <rhurst@bidmc.harvard.edu>              *
 \*****************************************************************************/
 import dns = require('dns')
 import express = require('express')
-import expressWs = require('express-ws')
-import https = require('https')
 import fs = require('fs')
-import os = require('os')
+import https = require('https')
 import path = require('path')
 import pty = require('node-pty')
 import serverStatic = require('serve-static')
 import syslog = require('modern-syslog')
+import ws = require('ws')
 import { ITerminalOptions } from 'xterm'
 
 interface config {
   profile: string
   cmd: string
   params: string[]
-  debug?: boolean
-  loglevel?: string
+  loglevel?: string|number
   pty?: {
     term: string
     cols: number
@@ -40,8 +38,8 @@ let folder = profile.split('@').join('/')
 let xterm = folder.split('/').splice(-1)[0].split('.')[0]
 
 console.log('*'.repeat(80))
-console.log(`Node.js ${process.version} BIDMC ITS XTerm service using profile: ${profile}`)
-console.log(`startup on ${process.env['HOSTNAME']} (${process.platform}) at ` + new Date())
+console.log(`Node.js ${process.version} BIDMC ITS Xterm service using profile: ${profile}`)
+console.log(`on ${process.env['HOSTNAME']} (${process.platform}) at ` + new Date())
 
 process.chdir(__dirname)
 console.log(`cwd:\t\t${__dirname}`)
@@ -55,11 +53,6 @@ let options: ITerminalOptions = require(`./${folder}/client.json`)
 config.loglevel = config.loglevel || 'LOG_NOTICE'
 if (isNaN(+config.loglevel)) config.loglevel = syslog.level[config.loglevel]
 console.log(`syslog: \t${syslog.level[+config.loglevel]} - level ${config.loglevel} event messaging`)
-syslog.upto(config.loglevel)
-
-if (config.debug) {
-  console.log('extended debugging messages will get recorded here')
-}
 
 if (!config.profile || (config.profile !== profile)) {
   console.log(`?FATAL: missing  or mismatch profile attribute, i.e., "profile":"${profile}"`)
@@ -92,14 +85,13 @@ export let ssl = { key: fs.readFileSync(config.sslKey), cert: fs.readFileSync(co
 if (!config.static)
   config.static = './static'
 
-var sessions = {}, logs = {}
+var sessions = {} //, logs = {}
 
 //  app server startup
 dns.lookup(config.host, (err, addr, family) => {
-
-  const base = express()
-  base.set('trust proxy', ['loopback', addr])
-  let server = https.createServer(ssl, base)
+  const app = express()
+  app.set('trust proxy', ['loopback', addr])
+  let server = https.createServer(ssl, app)
 
   process.title = `xterm-${xterm}`
   console.log(`process:\t${process.title} [${process.pid}]`)
@@ -109,20 +101,37 @@ dns.lookup(config.host, (err, addr, family) => {
   console.log(` + serving up:\t${config.cmd} ${config.params.join(' ')}`)
   console.log('*'.repeat(80))
   syslog.open(process.title)
+  syslog.upto(+config.loglevel)
   syslog.note(`listening on https://${host}:${port}/xterm/${profile}/`)
   syslog.note(`serving up '${config.cmd} ${config.params.join(' ')}'`)
 
-  //  add WebSocket endpoints for Express applications
-  const { app } = expressWs(base, server)
-  //app.use(`/xterm/${profile}`, express.static(path.join(__dirname, config.static)))
+  //  enable WebSocket endpoints
+  const wss = new ws.Server({ noServer:true, path:`/xterm/${profile}/session/`, clientTracking: true })
+
+  server.on('upgrade', (req, socket, head) => {
+    const pathname = new URL(req.url, `https://${config.host}`).pathname
+    if (pathname === `/xterm/${profile}/session/`) {
+      wss.handleUpgrade(req, socket, head, (ws) => {
+        wss.emit('connection', ws, req)
+      })
+    } else {
+      syslog.warn(`Unhandled WebSocket request: ${pathname}`)
+      syslog.debug(` + REQUEST: ${req}`)
+      syslog.debug(` + HEADER: ${head}`)
+      socket.destroy()
+    }
+  })
+
+  //  web services
   app.use(`/xterm/${profile}`, serverStatic(path.join(__dirname, folder), {redirect: false}))
   app.use(`/xterm/${profile}`, serverStatic(path.join(__dirname, config.static)))
 
+  //  REST services
   app.post(`/xterm/${profile}/session`, function (req, res) {
     let cols = parseInt(req.query.cols) || config.pty.cols
     let rows = parseInt(req.query.rows) || config.pty.rows
     let client = req.header('x-forwarded-for') || req.hostname
-    syslog.info(`POST new session from remote host: ${client}`)
+    syslog.debug(`POST new session from remote host: ${client}`)
     //  filter 1st address, assume any other(s) are proxies
     process.env.SSH_CLIENT = client.split(',')[0]
 
@@ -134,18 +143,21 @@ dns.lookup(config.host, (err, addr, family) => {
       })
 
     if (term.pid) {
-      syslog.note(`app PID: ${term.pid} CLIENT: ${process.env.SSH_CLIENT} ${rows}x${cols}`)
+      syslog.note(`Started app PID: ${term.pid} CLIENT: ${process.env.SSH_CLIENT} (${rows}x${cols})`)
       sessions[term.pid] = term
       sessions[term.pid].client = process.env.SSH_CLIENT
-      logs[term.pid] = ''
+      //logs[term.pid] = ''
     }
-
-    term.on('data', function (data) {
-      logs[term.pid] += data
-    })
+    else
+      syslog.warn(`Failed to spawn app request for CLIENT: ${process.env.SSH_CLIENT} (${rows}x${cols})`)
 
     res.json({ pid: term.pid, cols: cols, rows: rows, options: options })
     res.end()
+/*
+    term.on('data', function (data) {
+      logs[term.pid] += data
+    })
+*/
   })
 
   app.post(`/xterm/${profile}/session/:pid/size`, function (req, res) {
@@ -155,72 +167,111 @@ dns.lookup(config.host, (err, addr, family) => {
     let term = sessions[pid]
 
     if (!term) return
-    syslog.info(`Resize terminal ${pid} (${rows}x${cols})`)
+    syslog.debug(`Resize terminal ${pid} (${rows}x${cols})`)
     term.resize(cols, rows)
     res.end()
   })
 
-  //  WebSocket handlers
-  app.ws(`/xterm/${profile}/session/:pid`, function (ws, req) {
-    var term = sessions[parseInt(req.params.pid)]
-    syslog.info(`WebSocket connected to terminal ${term.pid}`)
-    ws.send(logs[term.pid])
+  //  WebSocket endpoints
+  //  utilize upgraded socket connection to serve I/O between app pty and browser client
+  wss.on('connection', (browser, req) => {
+    const what = new URL(req.url, `https://${config.host}`)
+    const pid = parseInt(what.searchParams.get('pid'))
+    let term = sessions[pid]
+    syslog.info(`WebSocket CLIENT: ${term.client} connected to app PID: ${term.pid}`)
+    //browser.send(logs[term.pid])
 
-    term.on('close', function () {
-      ws.close()
-    })
-
-    term.on('data', function (data) {
+    //  app --> browser client
+    term.on('data', (data) => {
       try {
-        ws.send(data);
+        browser.send(data)
       } catch (ex) {
         if (term.pid) {
-          syslog.note(`Aborting terminal ${term.pid} from socket error:`, ex.message)
-          unlock(term.pid)
-          delete term.pid
+          syslog.warn(`Aborted pty -> ws I/O from app PID: ${term.pid} to browser CLIENT: ${term.pid} error:`, ex.message)
+          browser.close()
         }
       }
     })
 
-    ws.on('message', function (msg) {
-      term.write(msg)
+    term.on('close', () => {
+      //  app shutdown
+      if (term.client) {
+        syslog.note(`Closed app PID: ${term.pid} CLIENT: ${term.client}`)
+        browser.close()
+      }
+      else {
+        syslog.warn(`Closed orphaned app PID: ${term.pid}`)
+      }
     })
 
-    ws.on('close', function () {
-      term.kill()
-      syslog.note(`Closed terminal PID: ${term.pid} CLIENT: ${term.client}`)
-      // Clean things up
-      delete sessions[term.pid]
-      delete logs[term.pid]
+    //  browser client --> app
+    browser.on('message', (msg) => {
+      try {
+        term.write(msg)
+      } catch (ex) {
+        syslog.warn(`Aborted ws -> pty I/O from browser CLIENT: ${term.client} to app PID: ${term.pid} error:`, ex.message)
+        browser.close()
+      }
+    })
+
+    browser.on('close', () => {
+      if (pid > 1) {
+        //  did user close browser with an open app?
+        try {
+          if (process.kill(pid)) {
+            syslog.warn(`Closed browser CLIENT: ${term.client}`)
+            syslog.note(`Terminated app PID: ${term.pid} CLIENT: ${term.client}`)
+            delete sessions[pid]
+          }
+          else {
+            syslog.warn(`Closed browser CLIENT: ${term.client}`)
+            syslog.note(`Failure to close app PID: ${term.pid} CLIENT: ${term.client}`)
+          }
+        } catch (ex) {
+          syslog.info(`WebSocket CLIENT: ${term.client} closed`)
+          delete sessions[pid]
+        }
+        term.client = ''
+        //delete logs[pid]
+      }
     })
   })
-
 })
 
-function unlock(pid: number) {
-  syslog.warn(`Releasing ${pid}`)
+function abortAll(signal = 'SIGHUP')
+{
+  syslog.note(`Aborting any open sessions: ${Object.keys(sessions).length}`)
+  for (let user in sessions) {
+    if (user) {
+      let term = sessions[user]
+      let pid = +user
+      if (pid > 1) term.kill()
+      delete sessions[user]
+    }
+  }
 }
 
 process.on('SIGHUP', function () {
   console.log(new Date() + ' :: received hangup')
   syslog.warn('hangup')
-  process.exit()
+  abortAll()
 })
 
 process.on('SIGINT', function () {
   console.log(new Date() + ' :: received interrupt')
   syslog.warn('interrupt')
-  process.exit()
+  abortAll('SIGINT')
 })
 
 process.on('SIGQUIT', function () {
   console.log(new Date() + ' :: received quit')
   syslog.warn('quit')
-  process.exit()
+  abortAll('SIGQUIT')
 })
 
 process.on('SIGTERM', function () {
   console.log(new Date() + ' shutdown')
-  syslog.note('terminated')
-  process.exit()
+  syslog.note('Terminating this service profile')
+  abortAll('SIGTERM')
+  setTimeout(process.exit, 10 * (Object.keys(sessions).length + 1))
 })

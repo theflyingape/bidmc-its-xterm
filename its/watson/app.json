@@ -5,5 +5,6 @@
   "pty": { "term":"linux", "cols":80, "rows":25, "cwd":"" },
   "host":"localhost", "port":8022,
   "sslKey":"./keys/localhost.key", "sslCert":"./keys/localhost.crt",
-  "static":"./static"
+  "static":"./static",
+  "loglevel":5
 }
