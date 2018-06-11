@@ -12,6 +12,7 @@ import serverStatic = require('serve-static')
 import syslog = require('modern-syslog')
 import ws = require('ws')
 import { ITerminalOptions } from 'xterm'
+const { URL } = require('url')
 
 interface config {
   profile: string
