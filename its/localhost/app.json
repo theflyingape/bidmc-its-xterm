@@ -3,7 +3,7 @@
   "cmd":"sh",
   "params": [ "-c", "echo -n \"Username: \" && read who && ssh ${who}@localhost" ],
   "pty": { "term":"xterm-256color", "cols":80, "rows":25, "cwd":"", "env":"" },
-  "host":"0.0.0.0", "port":2222,
+  "host":"127.0.0.1", "port":2222,
   "sslKey":"./keys/localhost.key", "sslCert":"./keys/localhost.crt",
   "static":"./static",
   "loglevel":7

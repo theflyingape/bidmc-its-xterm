@@ -6,6 +6,7 @@ import dns = require('dns')
 import express = require('express')
 import fs = require('fs')
 import https = require('https')
+import os = require('os')
 import path = require('path')
 import pty = require('node-pty')
 import serverStatic = require('serve-static')
@@ -44,7 +45,7 @@ let xterm = folder.split('/').splice(-1)[0].split('.')[0]
 
 console.log('*'.repeat(80))
 console.log(`Node.js ${process.version} BIDMC ITS Xterm service using profile: ${profile}`)
-console.log(`on ${process.env['HOSTNAME']} (${process.platform}) at ` + new Date())
+console.log(`on ${os.hostname()} (${process.platform}) at ` + new Date())
 
 process.chdir(__dirname)
 console.log(`cwd:\t\t${__dirname}`)
@@ -54,7 +55,7 @@ let config: config = require(`./${folder}/app.json`)
 
 console.log(`client options:\t./${folder}/client.json`)
 let options: client = require(`./${folder}/client.json`)
-if (!options.title) options.title = process.env['HOSTNAME'] || 'localhost'
+if (!options.title) options.title = os.hostname() || 'localhost'
 
 config.loglevel = config.loglevel || 'LOG_NOTICE'
 if (isNaN(+config.loglevel)) config.loglevel = syslog.level[config.loglevel]
