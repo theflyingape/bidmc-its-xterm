@@ -11,7 +11,9 @@
 #
 # transpile, place, and bundle
 echo "Transpiling ... "
-./node_modules/typescript/bin/tsc -p ./src --outDir ./build
+TSC=./node_modules/typescript/bin/tsc
+[ -x "${TSC}" ] || npm install
+${TSC} -p ./src --outDir ./build
 cp -pv ./build/app.js ./bidmc-its-xterm-app.js
 echo "Bundling ... "
 ./node_modules/browserify/bin/cmd.js ./build/client.js -o ./static/bundle.js

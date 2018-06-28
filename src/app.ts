@@ -33,6 +33,10 @@ interface config {
   static?: string
 }
 
+interface client extends ITerminalOptions {
+  title?: string
+}
+
 //  app server init
 let profile = process.argv.length > 2 ? process.argv[2] : 'its@localhost'
 let folder = profile.split('@').join('/')
@@ -49,7 +53,8 @@ console.log(`configuration:\t./${folder}/app.json`)
 let config: config = require(`./${folder}/app.json`)
 
 console.log(`client options:\t./${folder}/client.json`)
-let options: ITerminalOptions = require(`./${folder}/client.json`)
+let options: client = require(`./${folder}/client.json`)
+if (!options.title) options.title = process.env['HOSTNAME'] || 'localhost'
 
 config.loglevel = config.loglevel || 'LOG_NOTICE'
 if (isNaN(+config.loglevel)) config.loglevel = syslog.level[config.loglevel]

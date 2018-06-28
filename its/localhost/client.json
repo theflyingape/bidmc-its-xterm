@@ -1,5 +1,5 @@
 {
-  "title": "localhost", "bgColor": "#102040",
+  "bgColor": "#102040",
   "cols": 100, "scrollback": 1000,
   "fontFamily": "Lucida Console,Consolas,monospace",
   "theme": {  "foreground": "#c1c2c8", "background": "#010204" }
