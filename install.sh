@@ -44,7 +44,7 @@ fi
 
 echo
 echo "Node.js `$NODEJS/node -v`"
-[ -d node_modules ] && rm -rf node_modules
+[ -d node_modules ] && sudo rm -rf node_modules
 mkdir node_modules
 sudo chown nobody.wheel node_modules
 sudo chmod 2575 node_modules
