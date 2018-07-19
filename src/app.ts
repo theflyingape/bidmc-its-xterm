@@ -158,7 +158,7 @@ dns.lookup(config.host, (err, addr, family) => {
     else
       syslog.warn(`Failed to spawn app request for CLIENT: ${process.env.SSH_CLIENT} (${rows}x${cols})`)
 
-    res.json({ pid: term.pid, cols: cols, rows: rows, options: options })
+    res.json({ host: os.hostname(), pid: term.pid, cols: cols, rows: rows, options: options })
     res.end()
 /*
     term.on('data', function (data) {

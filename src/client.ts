@@ -39,6 +39,7 @@ let startup: client = {
     experimentalCharAtlas: 'dynamic'
 }
 let options: client = Object.assign({}, startup)
+let host = ''
 let pid = 0
 let term: Terminal
 
@@ -58,6 +59,7 @@ function newSession() {
             res.json().then(function (session) {
                 //res.text()
                 //pid = parseInt(session)
+                host = session.host
                 pid = session.pid
 
                 options.cols = 0
@@ -103,8 +105,8 @@ function newSession() {
                 term.open(document.getElementById('terminal'))
                 window.dispatchEvent(new Event('resize'))
 
-                term.writeln('\x1B[0;1mW\x1B[22melcome to BIDMC ITS Xterm.js service')
-                term.write(`\x1B[2mConnecting secure WebSocket to ${app} ... `)
+                term.writeln(`\x1B[0;1;4mW\x1B[melcome to BIDMC ITS Xterm.js on \x1B[1m${host}\x1B[m (${pid} 🖥 )`)
+                term.write(`\x1B[2mConnecting secure WebSocket to ${app.split('@')[1]} ... `)
 
                 protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://'
                 socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '')
