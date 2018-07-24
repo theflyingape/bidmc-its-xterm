@@ -1,7 +1,7 @@
 Summary:	BIDMC ITS Xterm.js service
 Name:		bidmc-its-xterm
 Version:	1.1
-Release:	0%{?dist}
+Release:	1%{?dist}
 
 License:	MIT
 Source0:	xterm.tgz
@@ -61,6 +61,11 @@ echo
 %attr(775,root,wheel) /opt/xterm
 
 %changelog
+* Tue Jul 24 2018 Robert Hurst <rhurst@bidmc.harvard.edu>
+- upgraded to ws 6.0.0
+- improve client connection information to web server & pid
+- added timeout and wall attributes to client.json
+- re-connect a disconnected session upon window focus
 * Mon Jun 11 2018 Robert Hurst <rhurst@bidmc.harvard.edu>
 - upgraded to Xterm 3.4.1 package
 - removed express-ws (DoS vulnerability), using ws
