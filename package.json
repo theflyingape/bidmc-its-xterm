@@ -1,7 +1,7 @@
 {
   "name": "bidmc-its-xterm",
-  "version": "2018.7.19",
-  "description": "BIDMC ITS Xterm.js services",
+  "version": "2018.7.24",
+  "description": "BIDMC ITS Xterm.js services 🖥",
   "main": "app",
   "author": "Robert Hurst",
   "license": "MIT",
@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/theflyingape/bidmc-its-xterm/issues"
   },
-  "homepage": "https://xterm-dev.bidmc.harvard.edu/xterm/its@watson/",
+  "homepage": "https://xterm.bidmc.harvard.edu/xterm/its@mycroft/",
   "engines": {
     "node": ">=8.9"
   },

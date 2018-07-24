@@ -13,5 +13,6 @@
     "keymap": [
         { "keyCode": 8, "shiftKey": false, "mapCode": 127 },
         { "keyCode": 8, "shiftKey": true, "mapCode": 8 }
-    ]
+    ],
+    "timeout": 0
 }

@@ -1,5 +1,7 @@
 {
   "cols": 80, "scrollback": 1000,
   "fontFamily": "tty,monospace", "fontSize": 20,
-  "theme": {  "foreground": "#c1c2c8", "background": "#010204" }
+  "theme": {  "foreground": "#c1c2c8", "background": "#010204" },
+  "timeout": 2,
+  "wall": "<pre>NO CARRIER</pre>"
 }
