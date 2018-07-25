@@ -155,7 +155,7 @@ function checkCarrier() {
 // if user returns to a closed session window, refresh
 window.onfocus = function() {
     if (pid) return
-    window.location.reload(true)
+    //window.location.reload(true)
 }
 
 window.onresize = function() {
