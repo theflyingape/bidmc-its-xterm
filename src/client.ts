@@ -19,6 +19,7 @@ import * as fit from 'xterm/lib/addons/fit/fit'
 
 //  IE11 polyfills
 import { assign } from 'es6-object-assign'
+import { Promise } from 'promise-polyfill'
 import 'whatwg-fetch'
 
 interface client extends ITerminalOptions {
