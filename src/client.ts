@@ -14,8 +14,8 @@
 //  @params :remote=[ip|host]
 
 //  IE11 polyfills
+var Promise = require('promise-polyfill').default   //  syntax for browserify
 import { assign } from 'es6-object-assign'
-import { Promise } from 'promise-polyfill'
 import 'whatwg-fetch'
 
 //  Xterm.js
