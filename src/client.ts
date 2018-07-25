@@ -14,6 +14,7 @@
 //  @params :remote=[ip|host]
 
 //  IE11 polyfills
+(<any>Promise)._unhandledRejectionFn = function(rejectError) {}
 import { assign } from 'es6-object-assign'
 import 'whatwg-fetch'
 
