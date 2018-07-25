@@ -32,6 +32,7 @@
     "express": "^4.16.3",
     "modern-syslog": "^1.1.4",
     "node-pty": "^0.7.6",
+    "promise-polyfill": "^8.0.0",
     "whatwg-fetch": "^2.0.4",
     "ws": "^6.0.0",
     "xterm": "^3.5.1"
