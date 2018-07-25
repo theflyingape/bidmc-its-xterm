@@ -56,7 +56,7 @@ function newSession() {
 
     // fit is called within a setTimeout, cols and rows need this
     setTimeout(function () {
-        fetch(`${app}/session/?cols=${cols}&rows=${rows}`, { method: 'POST' }).then(function (res) {
+        fetch(app + '/session/?cols=' + cols + '&rows=' + rows, { method: 'POST' }).then(function (res) {
             res.json().then(function (session) {
                 //res.text()
                 //pid = parseInt(session)
@@ -100,20 +100,20 @@ function newSession() {
                     if (!pid) return
                     cols = size.cols
                     rows = size.rows
-                    fetch(`${app}/session/${pid}/size?cols=${cols}&rows=${rows}`, { method: 'POST' })
+                    fetch(app + '/session/' + pid + '/size?cols=' + cols + '&rows=' + rows, { method: 'POST' })
                 })
 
                 term.open(document.getElementById('terminal'))
                 window.dispatchEvent(new Event('resize'))
 
-                term.writeln(`\x1B[0;1;4mW\x1B[melcome to \x1B[35mBIDMC\x1B[m ITS Xterm.js on \x1B[1m${host}\x1B[m (${pid} 🖥 )`)
-                term.write(`\x1B[2mConnecting secure WebSocket to ${app.split('@')[1]} ... `)
+                term.writeln('\x1B[0;1;4mW\x1B[melcome to \x1B[35mBIDMC\x1B[m ITS Xterm.js on \x1B[1m' + host +'\x1B[m (' + pid + ' 🖥 )')
+                term.write('\x1B[2mConnecting secure WebSocket to ' + app.split('@')[1] + ' ... ')
 
                 protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://'
                 socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '')
                     + app + '/session/'
 
-                socketURL += `?pid=${pid}`
+                socketURL += '?pid=' + pid
                 socket = new WebSocket(socketURL)
 
                 socket.onopen = () => {
@@ -168,7 +168,7 @@ window.onresize = () => {
             t = css
     }
 
-    Object.assign(t.style, { 'top':'0px', 'left': '0px', 'height':`${window.innerHeight}px`, 'width':`${window.innerWidth}px` })
+    Object.assign(t.style, { 'top':'0px', 'left': '0px', 'height':window.innerHeight + 'px', 'width':window.innerWidth + 'px' })
 //  autocompute resize ROWSxCOLS to fullwindow and notify backend app
     if (flexible) {
         if (fontSize) term.setOption('fontSize', fontSize)
@@ -200,9 +200,9 @@ window.onresize = () => {
         let tw = xt.clientWidth
         let tt = (window.innerHeight - th) >>1
         let tl = (window.innerWidth - tw) >>1
-        Object.assign(t.style, { 'top':`${tt}px`, 'left':`${tl}px`, 'height':`${th}px`, 'width':`${tw}px` })
+        Object.assign(t.style, { 'top':tt + 'px', 'left':tl + 'px', 'height':th + 'px', 'width':tw + 'px' })
         //  expand viewport (with scroll area) to match screen/canvas, else it covers the scrollbar
-        xvp.style.width = `${tw + sb}px`
+        xvp.style.width = (tw + sb) + 'px'
     }
 }
 
