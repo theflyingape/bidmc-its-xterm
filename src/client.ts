@@ -116,7 +116,7 @@ function newSession() {
                 socketURL += '?pid=' + pid
                 socket = new WebSocket(socketURL)
 
-                socket.onopen = () => {
+                socket.onopen = function() {
                     //term.attach(socket)
                     attach.attach(term, socket, true, true)
                     term.focus()
@@ -124,7 +124,7 @@ function newSession() {
                     term.writeln('open\x1B[m\n')
                 }
 
-                socket.onclose = (ev) => {
+                socket.onclose = function() {
                     term.setOption('cursorBlink', false)
                     term.writeln('\x1B[0;2mWebSocket close\x1B[m')
                     pid = 0
@@ -132,7 +132,7 @@ function newSession() {
                         reconnect = setInterval(checkCarrier, startup.timeout * 1000)
                 }
 
-                socket.onerror = (ev) => {
+                socket.onerror = function() {
                     term.writeln('\x1B[0;2mWebSocket \x1B[22;1;31merror\x1B[m')
                     pid = 0
                 }
@@ -152,12 +152,12 @@ function checkCarrier() {
 }
 
 // if user returns to a closed session window, refresh
-window.onfocus = () => {
+window.onfocus = function() {
     if (pid) return
     window.location.reload(true)
 }
 
-window.onresize = () => {
+window.onresize = function() {
     if (!pid || !term) return
 
     let t: CSSStyleRule
