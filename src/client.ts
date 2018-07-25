@@ -19,7 +19,7 @@ import * as fit from 'xterm/lib/addons/fit/fit'
 
 //  IE11 polyfills
 import { assign } from 'es6-object-assign'
-import fetch from 'node-fetch'
+import 'whatwg-fetch'
 
 interface client extends ITerminalOptions {
     title?: string
