@@ -28,6 +28,7 @@
     "test": "./test.sh"
   },
   "dependencies": {
+    "es6-object-assign": "^1.1.0",
     "express": "^4.16.3",
     "modern-syslog": "^1.1.4",
     "node-pty": "^0.7.6",
