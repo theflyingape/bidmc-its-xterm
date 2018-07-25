@@ -13,14 +13,15 @@
 //  https://webfarm/xterm/its@server/support/
 //  @params :remote=[ip|host]
 
+//  IE11 polyfills
+import assign from 'es6-object-assign'
+import Promise from 'promise-polyfill'
+import 'whatwg-fetch'
+
+//  Xterm.js
 import { Terminal, ITerminalOptions } from 'xterm'
 import * as attach from 'xterm/lib/addons/attach/attach'
 import * as fit from 'xterm/lib/addons/fit/fit'
-
-//  IE11 polyfills
-import { assign } from 'es6-object-assign'
-import { Promise } from 'promise-polyfill'
-import 'whatwg-fetch'
 
 interface client extends ITerminalOptions {
     title?: string
