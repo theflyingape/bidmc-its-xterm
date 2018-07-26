@@ -13,12 +13,6 @@
 //  https://webfarm/xterm/its@server/support/
 //  @params :remote=[ip|host]
 
-//  IE11 polyfills
-(<any>Promise)._unhandledRejectionFn = function(rejectError) {}
-import { assign } from 'es6-object-assign'
-import 'whatwg-fetch'
-
-//  Xterm.js
 import { Terminal, ITerminalOptions } from 'xterm'
 import * as attach from 'xterm/lib/addons/attach/attach'
 import * as fit from 'xterm/lib/addons/fit/fit'
@@ -46,7 +40,7 @@ let startup: client = {
     experimentalCharAtlas: 'dynamic',
     timeout: 60
 }
-let options: client = assign({}, startup)
+let options: client = Object.assign({}, startup)
 let host = ''
 let pid = 0
 let term: Terminal
@@ -62,7 +56,7 @@ function newSession() {
 
     // fit is called within a setTimeout, cols and rows need this
     setTimeout(function () {
-        fetch(app + '/session/?cols=' + cols + '&rows=' + rows, { method: 'POST' }).then(function (res) {
+        fetch(`${app}/session/?cols=${cols}&rows=${rows}`, { method: 'POST' }).then(function (res) {
             res.json().then(function (session) {
                 //res.text()
                 //pid = parseInt(session)
@@ -71,7 +65,7 @@ function newSession() {
 
                 options.cols = 0
                 options.rows = 0
-                assign(startup, session.options)
+                Object.assign(startup, session.options)
                 if (startup.title) document.title = startup.title
                 if (startup.bgColor) document.bgColor = startup.bgColor
                 if (startup.cols) options.cols = startup.cols
@@ -106,23 +100,23 @@ function newSession() {
                     if (!pid) return
                     cols = size.cols
                     rows = size.rows
-                    fetch(app + '/session/' + pid + '/size?cols=' + cols + '&rows=' + rows, { method: 'POST' })
+                    fetch(`${app}/session/${pid}/size?cols=${cols}&rows=${rows}`, { method: 'POST' })
                 })
 
                 term.open(document.getElementById('terminal'))
                 window.dispatchEvent(new Event('resize'))
 
-                term.writeln('\x1B[0;1;4mW\x1B[melcome to \x1B[35mBIDMC\x1B[m ITS Xterm.js on \x1B[1m' + host +'\x1B[m (' + pid + ' 🖥 )')
-                term.write('\x1B[2mConnecting secure WebSocket to ' + app.split('@')[1] + ' ... ')
+                term.writeln(`\x1B[0;1;4mW\x1B[melcome to \x1B[35mBIDMC\x1B[m ITS Xterm.js on \x1B[1m${host}\x1B[m (${pid} 🖥 )`)
+                term.write(`\x1B[2mConnecting secure WebSocket to ${app.split('@')[1]} ... `)
 
                 protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://'
                 socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '')
                     + app + '/session/'
 
-                socketURL += '?pid=' + pid
+                socketURL += `?pid=${pid}`
                 socket = new WebSocket(socketURL)
 
-                socket.onopen = function() {
+                socket.onopen = () => {
                     //term.attach(socket)
                     attach.attach(term, socket, true, true)
                     term.focus()
@@ -130,7 +124,7 @@ function newSession() {
                     term.writeln('open\x1B[m\n')
                 }
 
-                socket.onclose = function() {
+                socket.onclose = (ev) => {
                     term.setOption('cursorBlink', false)
                     term.writeln('\x1B[0;2mWebSocket close\x1B[m')
                     pid = 0
@@ -138,7 +132,7 @@ function newSession() {
                         reconnect = setInterval(checkCarrier, startup.timeout * 1000)
                 }
 
-                socket.onerror = function() {
+                socket.onerror = (ev) => {
                     term.writeln('\x1B[0;2mWebSocket \x1B[22;1;31merror\x1B[m')
                     pid = 0
                 }
@@ -158,12 +152,12 @@ function checkCarrier() {
 }
 
 // if user returns to a closed session window, refresh
-window.onfocus = function() {
+window.onfocus = () => {
     if (pid) return
-    //window.location.reload(true)
+    window.location.reload(true)
 }
 
-window.onresize = function() {
+window.onresize = () => {
     if (!pid || !term) return
 
     let t: CSSStyleRule
@@ -174,7 +168,7 @@ window.onresize = function() {
             t = css
     }
 
-    assign(t.style, { 'top':'0px', 'left': '0px', 'height':window.innerHeight + 'px', 'width':window.innerWidth + 'px' })
+    Object.assign(t.style, { 'top':'0px', 'left': '0px', 'height':`${window.innerHeight}px`, 'width':`${window.innerWidth}px` })
 //  autocompute resize ROWSxCOLS to fullwindow and notify backend app
     if (flexible) {
         if (fontSize) term.setOption('fontSize', fontSize)
@@ -206,9 +200,9 @@ window.onresize = function() {
         let tw = xt.clientWidth
         let tt = (window.innerHeight - th) >>1
         let tl = (window.innerWidth - tw) >>1
-        assign(t.style, { 'top':tt + 'px', 'left':tl + 'px', 'height':th + 'px', 'width':tw + 'px' })
+        Object.assign(t.style, { 'top':`${tt}px`, 'left':`${tl}px`, 'height':`${th}px`, 'width':`${tw}px` })
         //  expand viewport (with scroll area) to match screen/canvas, else it covers the scrollbar
-        xvp.style.width = (tw + sb) + 'px'
+        xvp.style.width = `${tw + sb}px`
     }
 }
 

@@ -1,6 +1,7 @@
-bidmc-its-xterm-app.js
+**/*.js
+**/*.js.map
+**/*.d.ts
 **/node_modules/**
 build/**
 keys/**
 logs/**
-static/bundle.js
