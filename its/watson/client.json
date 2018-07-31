@@ -11,8 +11,8 @@
         "brightBlue": "#0000fa", "brightMagenta": "#fa00fa", "brightCyan": "#00fafa"
     },
     "keymap": [
-        { "keyCode": 8, "shiftKey": false, "mapCode": 127 },
-        { "keyCode": 8, "shiftKey": true, "mapCode": 8 }
+        { "keyCode": 8, "shiftKey": false, "mapCode": 8 },
+        { "keyCode": 8, "shiftKey": true, "mapCode": 127 }
     ],
     "timeout": 0
 }
