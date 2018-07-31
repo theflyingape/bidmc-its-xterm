@@ -71,6 +71,7 @@ function newSession() {
                 if (startup.cols) options.cols = startup.cols
                 if (startup.rows) options.rows = startup.rows
                 if (startup.fontSize) options.fontSize = startup.fontSize
+                if (startup.keymap) options.keymap = startup.keymap
                 //  assert any URL overrides
                 if (params.cols) options.cols = params.cols
                 if (params.rows) options.rows = params.rows
