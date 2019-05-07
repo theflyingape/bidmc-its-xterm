@@ -20,7 +20,7 @@
   },
   "homepage": "https://xterm.bidmc.harvard.edu/xterm/its@mycroft/",
   "engines": {
-    "node": ">=8.9"
+    "node": ">=10.10"
   },
   "scripts": {
     "build": "echo 'run script: ./build.sh or ./build.sh rpm'",
@@ -29,16 +29,16 @@
   },
   "dependencies": {
     "express": "^4.16.3",
-    "modern-syslog": "^1.1.4",
-    "node-pty": "^0.7.6",
-    "ws": "^6.0.0",
-    "xterm": "^3.5.1"
+    "modern-syslog": "^1.2.0",
+    "node-pty": "^0.8.1",
+    "ws": "^7.0.0",
+    "xterm": "^3.12.2"
   },
   "devDependencies": {
     "@types/express": "^4.16.0",
-    "@types/node": "^10.5.4",
-    "@types/ws": "^5.1.2",
+    "@types/node": "^10.14.6",
+    "@types/ws": "^6.0.1",
     "browserify": "^16.2.2",
-    "typescript": "^2.9.2"
+    "typescript": "^3.4.5"
   }
 }

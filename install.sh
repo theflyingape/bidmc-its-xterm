@@ -12,21 +12,22 @@ if [ ! -d keys ]; then
 	mkdir keys
 	sudo chown root.sshd keys
 	sudo chmod 2750 keys
-	sudo openssl req -nodes -newkey rsa:2048 -sha256 -keyout "keys/localhost.key" -x509 -days 1075 -out "keys/localhost.crt" -subj "/C=US/ST=Massachusetts/L=Boston/O=Beth Israel Deaconess Medical Center Inc/OU=IS/CN=localhost"
+	sudo openssl req -nodes -newkey rsa:2048 -sha256 -keyout "keys/localhost.key" -x509 -days 1095 -out "keys/localhost.crt" \
+		-subj "/C=US/ST=Massachusetts/L=Boston/O=Beth Israel Deaconess Medical Center Inc/OU=IS/CN=localhost"
 fi
 
 NODEJS=$( dirname "`which node 2> /dev/null`" )
-[ "${NODEJS}" = "." ] && NODEJS=/opt/rh/rh-nodejs8/root/usr/bin
+[ "${NODEJS}" = "." ] && NODEJS=/opt/rh/rh-nodejs10/root/usr/bin
 if [ ! -f $NODEJS/node ]; then
-	sudo yum install gcc gcc-c++ rh-nodejs8-nodejs
+	sudo yum install gcc gcc-c++ rh-nodejs10-nodejs
 	[ -n "$http_proxy" ] && $NODEJS/npm config set proxy=$http_proxy
 	[ -n "$https_proxy" ] && $NODEJS/npm config set https-proxy=$https_proxy
 fi
 
 echo
-echo "--> Actively running Xterm.js services:"
+echo "⇒ actively running Xterm.js app services:"
 sudo netstat -pant | grep -E 'LISTEN.*xterm'
-echo "--> Actively running Xterm.js SSH sessions:"
+echo "⇒ actively running Xterm.js SSH client sessions:"
 pstree -s | grep -E 'xterm.*ssh'
 
 echo

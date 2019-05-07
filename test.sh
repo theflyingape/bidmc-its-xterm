@@ -3,7 +3,7 @@
 sudo -v
 [ -L /etc/profile.d/nodejs.sh ] && source /etc/profile.d/nodejs.sh
 NODE=`which node 2> /dev/null`
-[ -z "${NODE}" ] && NODE="/opt/rh/rh-nodejs8/root/usr/bin/node"
+[ -z "${NODE}" ] && NODE="/opt/rh/rh-nodejs10/root/usr/bin/node"
 APP=bidmc-*.js
 
 domain="its"
