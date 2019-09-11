@@ -1,6 +1,6 @@
 Summary:	BIDMC ITS Xterm.js service
 Name:		bidmc-its-xterm
-Version:	1.1
+Version:	1.2
 Release:	1%{?dist}
 
 License:	MIT
@@ -61,6 +61,15 @@ echo
 %attr(775,root,wheel) /opt/xterm
 
 %changelog
+* Wed Sep 11 2019 Robert Hurst <rhurst@bidmc.harvard.edu>
+- major npm package outdates:
+- @types/express    4.17.0  ->  4.17.1
+- @types/node      10.14.10 -> 10.14.18
+- @types/ws          6.0.1  ->  6.0.3
+- browserify        16.2.3  -> 16.5.0
+- typescript         3.5.2  ->  3.6.3
+- ws                 7.0.1  ->  7.1.2
+- xterm             3.14.4  ->  4.0.0
 * Tue Jul 24 2018 Robert Hurst <rhurst@bidmc.harvard.edu>
 - upgraded to ws 6.0.0
 - improve client connection information to web server & pid

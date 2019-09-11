@@ -1,6 +1,6 @@
 {
   "name": "bidmc-its-xterm",
-  "version": "2018.7.31",
+  "version": "2019.9.11",
   "description": "BIDMC ITS Xterm.js services 🖥",
   "main": "app",
   "author": "Robert Hurst",
@@ -28,17 +28,17 @@
     "test": "./test.sh"
   },
   "dependencies": {
-    "express": "^4.16.3",
+    "express": "^4.17.1",
     "modern-syslog": "^1.2.0",
     "node-pty": "^0.8.1",
-    "ws": "^7.0.0",
-    "xterm": "^3.12.2"
+    "ws": "^7.1.2",
+    "xterm": "^4.0.0"
   },
   "devDependencies": {
-    "@types/express": "^4.16.0",
-    "@types/node": "^10.14.6",
-    "@types/ws": "^6.0.1",
-    "browserify": "^16.2.2",
-    "typescript": "^3.4.5"
+    "@types/express": "^4.17.1",
+    "@types/node": "^10.14.18",
+    "@types/ws": "^6.0.3",
+    "browserify": "^16.5.0",
+    "typescript": "^3.6.3"
   }
 }
