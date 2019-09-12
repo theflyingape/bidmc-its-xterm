@@ -183,7 +183,7 @@ dns.lookup(config.host, (err, addr, family) => {
   //  utilize upgraded socket connection to serve I/O between app pty and browser client
   wss.on('connection', (browser, req) => {
     const what = new URL(req.url, `https://${config.host}`)
-    const pid = parseInt(what.searchParams.get('pid'))
+    let pid = parseInt(what.searchParams.get('pid'))
     let term = sessions[pid]
     syslog.info(`WebSocket CLIENT: ${term.client} connected to app PID: ${term.pid}`)
     //browser.send(logs[term.pid])
@@ -204,6 +204,7 @@ dns.lookup(config.host, (err, addr, family) => {
       //  app shutdown
       if (term.client) {
         syslog.note(`Closed app PID: ${term.pid} CLIENT: ${term.client}`)
+        pid = 0
         browser.close()
       }
       else {
@@ -222,24 +223,17 @@ dns.lookup(config.host, (err, addr, family) => {
     })
 
     browser.on('close', () => {
-      if (pid > 1) {
+      if (pid > 1) try {
         //  did user close browser with an open app?
-        try {
-          if (process.kill(pid)) {
-            syslog.warn(`Closed browser CLIENT: ${term.client}`)
-            syslog.note(`Terminated app PID: ${term.pid} CLIENT: ${term.client}`)
-            delete sessions[pid]
-          }
-          else {
-            syslog.warn(`Closed browser CLIENT: ${term.client}`)
-            syslog.note(`Failure to close app PID: ${term.pid} CLIENT: ${term.client}`)
-          }
-        } catch (ex) {
-          syslog.info(`WebSocket CLIENT: ${term.client} closed`)
-          delete sessions[pid]
-        }
+        term.destroy()
+        syslog.warn(`Closed browser CLIENT: ${term.client}`)
+        syslog.note(`Terminated app PID: ${term.pid} CLIENT: ${term.client}`)
+        delete sessions[pid]
         term.client = ''
         //delete logs[pid]
+      }
+      catch (ex) {
+        syslog.error(`?FATAL browser CLIENT: ${term.client} close event on PID: ${term.pid} "${ex}"`)
       }
     })
   })
