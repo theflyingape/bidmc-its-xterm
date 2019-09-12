@@ -11,12 +11,12 @@
 #
 # transpile, place, and bundle
 echo "Transpiling ... "
-TSC=./node_modules/typescript/bin/tsc
+TSC=./tsc
 [ -x "${TSC}" ] || npm install
 ${TSC} -p ./src --outDir ./build
 cp -pv ./build/app.js ./bidmc-its-xterm-app.js
 echo "Bundling ... "
-./node_modules/browserify/bin/cmd.js ./build/client.js -o ./static/bundle.js
+./browserify ./build/client.js -o ./static/bundle.js
 ls -gho ./static/bundle.js
 rm build/*
 
@@ -24,7 +24,7 @@ rm build/*
 [ "$1" == "rpm" ] || exit 0
 sudo -v || exit
 which dos2unix > /dev/null && dos2unix src/bidmc-its-xterm.spec
-cp src/bidmc-its-xterm.spec ~/rpmbuild/SPECS/
+cp -v src/bidmc-its-xterm.spec ~/rpmbuild/SPECS/
 sudo tar czvf ~/rpmbuild/SOURCES/xterm.tgz 	\
 	--transform 's,\(.*\),xterm/\1,' 	\
 	README.md 			\
