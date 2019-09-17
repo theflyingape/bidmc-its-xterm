@@ -1,7 +1,7 @@
 Summary:	BIDMC ITS Xterm.js service
 Name:		bidmc-its-xterm
 Version:	1.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 License:	MIT
 Source0:	xterm.tgz
@@ -61,6 +61,8 @@ echo
 %attr(775,root,wheel) /opt/xterm
 
 %changelog
+* Tue Sep 17 2019 Robert Hurst <rhurst@bidmc.harvard.edu>
+- package errata fixes
 * Wed Sep 11 2019 Robert Hurst <rhurst@bidmc.harvard.edu>
 - major npm package outdates:
 - @types/express    4.17.0  ->  4.17.1
