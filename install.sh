@@ -17,9 +17,9 @@ if [ ! -d keys ]; then
 fi
 
 NODEJS=$( dirname "`which node 2> /dev/null`" )
-[ "${NODEJS}" = "." ] && NODEJS=/opt/rh/rh-nodejs10/root/usr/bin
+[ "${NODEJS}" = "." ] && NODEJS=/opt/rh/rh-nodejs12/root/usr/bin
 if [ ! -f $NODEJS/node ]; then
-	sudo yum install gcc gcc-c++ rh-nodejs10-nodejs
+	sudo yum install gcc gcc-c++ rh-nodejs12-nodejs
 	[ -n "$http_proxy" ] && $NODEJS/npm config set proxy=$http_proxy
 	[ -n "$https_proxy" ] && $NODEJS/npm config set https-proxy=$https_proxy
 fi
@@ -61,3 +61,4 @@ for folder in $domain/*; do
 done
 
 exit
+

@@ -1,7 +1,7 @@
 Summary:	BIDMC ITS Xterm.js service
 Name:		bidmc-its-xterm
-Version:	1.2
-Release:	2%{?dist}
+Version:	1.3
+Release:	1%{?dist}
 
 License:	MIT
 Source0:	xterm.tgz
@@ -11,7 +11,7 @@ Group:		Applications/Internet
 URL:		https://git.bidmc.harvard.edu/projects/CAS/repos/server/browse/opt/xterm
 Prefix:		/opt
 
-Requires:	gcc gcc-c++ rh-nodejs10-nodejs
+Requires:	gcc gcc-c++ rh-nodejs12-nodejs
 
 %description
 an Apache-Node.js implementation for web SSH client needs
@@ -61,6 +61,11 @@ echo
 %attr(775,root,wheel) /opt/xterm
 
 %changelog
+* Thu Feb 13 2020 Robert Hurst <rhurst@bidmc.harvard.edu>
+- node-pty          0.8.1   ->  0.9.0
+- ws                7.1.2   ->  7.2.1
+- xterm             4.0.0   ->  4.4.0
+- added Unicode 11 support with xterm-addon-unicode11
 * Tue Sep 17 2019 Robert Hurst <rhurst@bidmc.harvard.edu>
 - package errata fixes
 * Wed Sep 11 2019 Robert Hurst <rhurst@bidmc.harvard.edu>

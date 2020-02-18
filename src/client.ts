@@ -16,6 +16,7 @@
 import { Terminal, ITerminalOptions } from 'xterm'
 import { AttachAddon } from 'xterm-addon-attach'
 import { FitAddon } from 'xterm-addon-fit'
+import { Unicode11Addon } from 'xterm-addon-unicode11'
 import { WebLinksAddon } from 'xterm-addon-web-links'
 
 interface client extends ITerminalOptions {
@@ -65,6 +66,13 @@ function newSession() {
                 host = session.host
                 pid = session.pid
 
+                protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://'
+                socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '')
+                    + app + '/session/'
+
+                socketURL += `?pid=${pid}`
+                socket = new WebSocket(socketURL)
+
                 options.cols = 0
                 options.rows = 0
                 Object.assign(startup, session.options)
@@ -87,7 +95,11 @@ function newSession() {
                 startup.rows = session.rows
 
                 term = new Terminal(startup)
+                term.open(document.getElementById('terminal'))
+                term.loadAddon(new AttachAddon(socket))
+		term.loadAddon(new Unicode11Addon())
                 term.loadAddon(new WebLinksAddon())
+		term.unicode.activeVersion = '11'
                 term.loadAddon(fit)
 
                 if (options.keymap && options.keymap.length)
@@ -106,23 +118,12 @@ function newSession() {
                     fetch(`${app}/session/${pid}/size?cols=${cols}&rows=${rows}`, { method: 'POST' })
                 })
 
-                term.open(document.getElementById('terminal'))
                 window.dispatchEvent(new Event('resize'))
 
-                term.writeln(`\x1B[0;1;4mW\x1B[melcome to \x1B[35mBIDMC\x1B[m ITS Xterm.js on \x1B[1m${host}\x1B[m (${pid} 🖥 )`)
+                term.writeln(`\x1B[0;1;4mW\x1B[melcome to \x1B[35mBIDMC\x1B[m ITS Xterm.js on \x1B[1m${host}\x1B[m (${pid} 🐧)`)
                 term.write(`\x1B[2mConnecting secure WebSocket to ${app.split('@')[1]} ... `)
 
-                protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://'
-                socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '')
-                    + app + '/session/'
-
-                socketURL += `?pid=${pid}`
-                socket = new WebSocket(socketURL)
-
                 socket.onopen = () => {
-                    //term.attach(socket)
-                    //attach.attach(term, socket, true, true)
-                    term.loadAddon(new AttachAddon(socket))
                     term.focus()
                     term.setOption('cursorBlink', true)
                     term.writeln('open\x1B[m\n')
