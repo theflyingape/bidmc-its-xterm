@@ -51,7 +51,7 @@ sudo chown nobody.wheel node_modules
 sudo chmod 2575 node_modules
 $NODEJS/npm install
 
-[ -s browserify ] || ln -s node_modules/browserify/bin/cmd.js
+[ -s browserify ] || ln -s node_modules/browserify/bin/cmd.js browserify
 [ -s tsc ] || ln -s node_modules/typescript/bin/tsc
 
 echo

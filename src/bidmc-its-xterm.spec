@@ -1,7 +1,7 @@
 Summary:	BIDMC ITS Xterm.js service
 Name:		bidmc-its-xterm
 Version:	1.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 License:	MIT
 Source0:	xterm.tgz
