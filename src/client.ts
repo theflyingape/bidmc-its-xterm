@@ -40,6 +40,7 @@ let cols = params.cols, rows = params.rows, fontSize = params.size
 let startup: client = {
     bellSound: BELL_SOUND, bellStyle: 'sound',
     cursorBlink: true, fontFamily: 'Consolas,Lucida Console,monospace',
+    fontWeight: 'normal', fontWeightBold: 'bold',
     timeout: 60
 }
 let options: client = Object.assign({}, startup)
@@ -146,13 +147,13 @@ function newSession() {
     term.open(document.getElementById('terminal'))
     fit.fit()
 
-    term.writeln(`\x1B[0;1;4mW\x1B[melcome to \x1B[35mBIDMC\x1B[m ITS Xterm.js on \x1B[1m${host}\x1B[m (${pid} 🐧)`)
-    term.write(`\x1B[2mConnecting secure WebSocket to ${app.split('@')[1]} ... `)
-
     fetch(`${app}/session/?cols=${cols}&rows=${rows}`, { method: 'POST' }).then(function (res) {
         res.json().then(function (session) {
             host = session.host
             pid = session.pid
+
+            term.writeln(`\x1B[0;1;4mW\x1B[melcome to \x1B[35mBIDMC\x1B[m ITS Xterm.js on \x1B[1m${host}\x1B[m (${pid} 🐧)`)
+            term.write(`\x1B[2mConnecting secure WebSocket to ${app.split('@')[1]} ... `)
 
             const protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://'
             const socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '')
@@ -166,8 +167,23 @@ function newSession() {
             if (startup.bgColor) document.bgColor = startup.bgColor
             if (startup.cols) options.cols = startup.cols
             if (startup.rows) options.rows = startup.rows
-            if (startup.fontSize) options.fontSize = startup.fontSize
+            if (startup.fontFamily) {
+                options.fontFamily = startup.fontFamily
+                term.setOption('fontFamily', options.fontFamily)
+            }
+            if (startup.fontSize) {
+                options.fontSize = startup.fontSize
+                term.setOption('fontSize', options.fontSize)
+            }
             if (startup.keymap) options.keymap = startup.keymap
+            if (startup.scrollback) {
+                options.scrollback = startup.scrollback
+                term.setOption('scrollback', options.scrollback)
+            }
+            if (startup.theme) {
+                options.theme = startup.theme
+                term.setOption('theme', options.theme)
+            }
             //  assert any URL overrides
             if (params.cols) options.cols = params.cols
             if (params.rows) options.rows = params.rows
