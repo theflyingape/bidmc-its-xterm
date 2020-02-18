@@ -51,6 +51,9 @@ sudo chown nobody.wheel node_modules
 sudo chmod 2575 node_modules
 $NODEJS/npm install
 
+[ -s browserify ] || ln -s node_modules/browserify/bin/cmd.js
+[ -s tsc ] || ln -s node_modules/typescript/bin/tsc
+
 echo
 echo "Construct your its/server needs and enable startup service(s), i.e.,"
 echo "# sudo cp xterm-its@.service /etc/systemd/system/"
