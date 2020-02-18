@@ -160,11 +160,12 @@ dns.lookup(config.host, (err, addr, family) => {
 
     res.json({ host: os.hostname(), pid: term.pid, cols: cols, rows: rows, options: options })
     res.end()
-/*
+
+    //  buffer any initial output from forked process
     term.on('data', function (data) {
-      logs[term.pid] += data
+      sessions[term.pid].startup = (sessions[term.pid].startup || '') + data
     })
-*/
+
   })
 
   app.post(`/xterm/${profile}/session/:pid/size`, function (req, res) {
@@ -186,7 +187,7 @@ dns.lookup(config.host, (err, addr, family) => {
     let pid = parseInt(what.searchParams.get('pid'))
     let term = sessions[pid]
     syslog.info(`WebSocket CLIENT: ${term.client} connected to app PID: ${term.pid}`)
-    //browser.send(logs[term.pid])
+    if (term.startup) browser.send(term.startup)
 
     //  app --> browser client
     term.on('data', (data) => {

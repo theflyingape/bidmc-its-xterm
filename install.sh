@@ -61,4 +61,3 @@ for folder in $domain/*; do
 done
 
 exit
-

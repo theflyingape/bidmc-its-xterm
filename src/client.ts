@@ -14,7 +14,6 @@
 //  @params :remote=[ip|host]
 
 import { Terminal, ITerminalOptions } from 'xterm'
-import { AttachAddon } from 'xterm-addon-attach'
 import { FitAddon } from 'xterm-addon-fit'
 import { Unicode11Addon } from 'xterm-addon-unicode11'
 import { WebLinksAddon } from 'xterm-addon-web-links'
@@ -46,115 +45,9 @@ let startup: client = {
 let options: client = Object.assign({}, startup)
 let host = ''
 let pid = 0
+let reconnect: NodeJS.Timer
+let socket: WebSocket
 let term: Terminal
-
-var reconnect
-var protocol, socketURL, socket
-
-newSession()
-
-function newSession() {
-    pid = 0
-    if (reconnect) clearInterval(reconnect)
-
-    // fit is called within a setTimeout, cols and rows need this
-    setTimeout(function () {
-        fetch(`${app}/session/?cols=${cols}&rows=${rows}`, { method: 'POST' }).then(function (res) {
-            res.json().then(function (session) {
-                //res.text()
-                //pid = parseInt(session)
-                host = session.host
-                pid = session.pid
-
-                protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://'
-                socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '')
-                    + app + '/session/'
-
-                socketURL += `?pid=${pid}`
-                socket = new WebSocket(socketURL)
-
-                options.cols = 0
-                options.rows = 0
-                Object.assign(startup, session.options)
-                if (startup.title) document.title = startup.title
-                if (startup.bgColor) document.bgColor = startup.bgColor
-                if (startup.cols) options.cols = startup.cols
-                if (startup.rows) options.rows = startup.rows
-                if (startup.fontSize) options.fontSize = startup.fontSize
-                if (startup.keymap) options.keymap = startup.keymap
-                //  assert any URL overrides
-                if (params.cols) options.cols = params.cols
-                if (params.rows) options.rows = params.rows
-                if (params.size) options.fontSize = params.size
-                if (options.cols || options.rows)
-                    flexible = false
-                else
-                    flexible = true
-                //  init client to match backend
-                startup.cols = session.cols
-                startup.rows = session.rows
-
-                term = new Terminal(startup)
-                term.open(document.getElementById('terminal'))
-                term.loadAddon(new AttachAddon(socket))
-		term.loadAddon(new Unicode11Addon())
-                term.loadAddon(new WebLinksAddon())
-		term.unicode.activeVersion = '11'
-                term.loadAddon(fit)
-
-                if (options.keymap && options.keymap.length)
-                    term.attachCustomKeyEventHandler(function (ev) {
-                        for (let i in options.keymap)
-                            if (options.keymap[i].keyCode == ev.keyCode && options.keymap[i].shiftKey == ev.shiftKey) {
-                                socket.send(String.fromCharCode(options.keymap[i].mapCode))
-                                return false
-                            }
-                    })
-
-                term.onResize(size => {
-                    if (!pid) return
-                    cols = size.cols
-                    rows = size.rows
-                    fetch(`${app}/session/${pid}/size?cols=${cols}&rows=${rows}`, { method: 'POST' })
-                })
-
-                window.dispatchEvent(new Event('resize'))
-
-                term.writeln(`\x1B[0;1;4mW\x1B[melcome to \x1B[35mBIDMC\x1B[m ITS Xterm.js on \x1B[1m${host}\x1B[m (${pid} 🐧)`)
-                term.write(`\x1B[2mConnecting secure WebSocket to ${app.split('@')[1]} ... `)
-
-                socket.onopen = () => {
-                    term.focus()
-                    term.setOption('cursorBlink', true)
-                    term.writeln('open\x1B[m\n')
-                }
-
-                socket.onclose = (ev) => {
-                    term.setOption('cursorBlink', false)
-                    term.writeln('\x1B[0;2mWebSocket close\x1B[m')
-                    pid = 0
-                    if (startup.timeout > 0)
-                        reconnect = setInterval(checkCarrier, startup.timeout * 1000)
-                }
-
-                socket.onerror = (ev) => {
-                    term.writeln('\x1B[0;2mWebSocket \x1B[22;1;31merror\x1B[m')
-                    pid = 0
-                }
-            })
-        })
-    }, 0)
-}
-
-// terminate endpoint view and access to the web server
-function checkCarrier() {
-    term.dispose()
-    document.getElementById('terminal').hidden = true
-    let wall = document.getElementById('wall')
-    if (startup.wall) wall.innerHTML += startup.wall
-    wall.hidden = false
-    if (reconnect) clearInterval(reconnect)
-}
 
 // if user returns to a closed session window, refresh
 window.onfocus = () => {
@@ -192,6 +85,7 @@ window.onresize = () => {
 
 //  make it stick
     term.resize(options.cols || xy.cols, options.rows || xy.rows)
+    term.scrollToBottom()
     centerize()
 
 //  menterize terminal's canvas within browser window
@@ -222,3 +116,115 @@ function parseStartup(queryString: string) {
     //if (params.rows || params.cols) flexible = false
     return params
 }
+
+function newSession() {
+    pid = 0
+    if (reconnect) clearInterval(reconnect)
+
+    term = new Terminal(startup)
+    term.loadAddon(new Unicode11Addon())
+    term.loadAddon(new WebLinksAddon())
+    term.loadAddon(fit)
+
+    term.onData(data => {
+		if (pid) socket.send(data)
+		else {
+			term.dispose()
+			if (data == '\r' || data == ' ')
+				newSession()
+		}
+	})
+
+    term.onResize(size => {
+        cols = size.cols
+        rows = size.rows
+        if (pid)
+            fetch(`${app}/session/${pid}/size?cols=${cols}&rows=${rows}`, { method: 'POST' })
+    })
+
+    term.unicode.activeVersion = '11'
+    term.open(document.getElementById('terminal'))
+    fit.fit()
+
+    term.writeln(`\x1B[0;1;4mW\x1B[melcome to \x1B[35mBIDMC\x1B[m ITS Xterm.js on \x1B[1m${host}\x1B[m (${pid} 🐧)`)
+    term.write(`\x1B[2mConnecting secure WebSocket to ${app.split('@')[1]} ... `)
+
+    fetch(`${app}/session/?cols=${cols}&rows=${rows}`, { method: 'POST' }).then(function (res) {
+        res.json().then(function (session) {
+            host = session.host
+            pid = session.pid
+
+            const protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://'
+            const socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '')
+                + app + '/session/'
+            socket = new WebSocket(socketURL + `?pid=${pid}`)
+
+            options.cols = 0
+            options.rows = 0
+            Object.assign(startup, session.options)
+            if (startup.title) document.title = startup.title
+            if (startup.bgColor) document.bgColor = startup.bgColor
+            if (startup.cols) options.cols = startup.cols
+            if (startup.rows) options.rows = startup.rows
+            if (startup.fontSize) options.fontSize = startup.fontSize
+            if (startup.keymap) options.keymap = startup.keymap
+            //  assert any URL overrides
+            if (params.cols) options.cols = params.cols
+            if (params.rows) options.rows = params.rows
+            if (params.size) options.fontSize = params.size
+            if (options.cols || options.rows)
+                flexible = false
+            else
+                flexible = true
+            //  init client to match backend
+            startup.cols = session.cols
+            startup.rows = session.rows
+
+            if (options.keymap && options.keymap.length)
+                term.attachCustomKeyEventHandler(function (ev) {
+                    for (let i in options.keymap)
+                        if (options.keymap[i].keyCode == ev.keyCode && options.keymap[i].shiftKey == ev.shiftKey) {
+                            socket.send(String.fromCharCode(options.keymap[i].mapCode))
+                            return false
+                        }
+                })
+
+            socket.onmessage = function (ev) {
+                term.write(ev.data)
+            }
+
+            socket.onopen = () => {
+                term.focus()
+                term.setOption('cursorBlink', true)
+                term.writeln('open\x1B[m\n')
+            }
+
+            socket.onclose = (ev) => {
+                term.setOption('cursorBlink', false)
+                term.writeln('\x1B[0;2mWebSocket close\x1B[m')
+                pid = 0
+                if (startup.timeout > 0)
+                    reconnect = setInterval(checkCarrier, startup.timeout * 1000)
+            }
+
+            socket.onerror = (ev) => {
+                term.writeln('\x1B[0;2mWebSocket \x1B[22;1;31merror\x1B[m')
+                pid = 0
+            }
+
+            window.dispatchEvent(new Event('resize'))
+        })
+    })
+}
+
+// terminate endpoint view and access to the web server
+function checkCarrier() {
+    term.dispose()
+    document.getElementById('terminal').hidden = true
+    let wall = document.getElementById('wall')
+    if (startup.wall) wall.innerHTML += startup.wall
+    wall.hidden = false
+    if (reconnect) clearInterval(reconnect)
+}
+
+newSession()
