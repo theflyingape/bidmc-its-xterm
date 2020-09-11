@@ -1,0 +1,9 @@
+{
+  "profile":"its@toby",
+  "cmd":"su",
+  "params": [ "cacheusr", "/var/local/cacheusr/bin/logins.sh", "toby" ],
+  "pty": { "term":"linux", "cols":80, "rows":25, "cwd":"" },
+  "host":"127.0.0.1", "port":8122,
+  "sslKey":"./keys/localhost.key", "sslCert":"./keys/localhost.crt",
+  "static":"./static"
+}
