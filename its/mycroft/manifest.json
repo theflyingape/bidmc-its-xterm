@@ -1,15 +1,14 @@
 {
   "name": "CCC Classic",
   "short_name": "MYCROFT",
+  "start_url": "https://xterm.bidmc.harvard.edu/xterm/its@mycroft/",
+  "version": "2019.9.22",
+  "author": "Robert Hurst",
   "lang": "en-US",
-  "start_url": "https://xterm-dev.bidmc.harvard.edu/xterm/its@mycroft/",
-  "version": "2018.2.13",
-  "display": "fullscreen",
-  "orientation": "portrait",
-  "icons": [
-    {
+  "background_color": "#008080",
+  "display": "standalone",
+  "icons": [{
       "src": "CCC.png"
-    }
-  ],
-  "author": "Robert Hurst"
+  }],
+  "theme_color": "#102040"
 }
