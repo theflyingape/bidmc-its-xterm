@@ -29,6 +29,7 @@ sudo tar czvf ~/rpmbuild/SOURCES/xterm.tgz 	\
 	--transform 's,\(.*\),xterm/\1,' 	\
 	README.md 			\
 	*.conf 				\
+	*.js 				\
 	*.json 				\
 	*.sh 				\
 	its/localhost 			\
