@@ -47,8 +47,8 @@ echo
 echo "Node.js `$NODEJS/node -v`"
 [ -d node_modules ] && sudo rm -rf node_modules
 mkdir node_modules
-sudo chown nobody.wheel node_modules
-sudo chmod 2575 node_modules
+sudo chown nobody.wheel build node_modules
+sudo chmod 2575 build node_modules
 $NODEJS/npm install
 
 [ -s browserify ] || ln -s node_modules/browserify/bin/cmd.js browserify
