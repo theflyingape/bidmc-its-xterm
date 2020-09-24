@@ -135,8 +135,8 @@ dns.lookup(config.host, (err, addr, family) => {
 
   //  REST services
   app.post(`/xterm/${profile}/session`, function (req, res) {
-    let cols = parseInt(req.query.cols) || config.pty.cols
-    let rows = parseInt(req.query.rows) || config.pty.rows
+    let cols = parseInt(req.query.cols.toString()) || config.pty.cols
+    let rows = parseInt(req.query.rows.toString()) || config.pty.rows
     let client = req.header('x-forwarded-for') || req.hostname
     syslog.debug(`POST new session from remote host: ${client}`)
     //  filter 1st address, assume any other(s) are proxies
@@ -170,8 +170,8 @@ dns.lookup(config.host, (err, addr, family) => {
 
   app.post(`/xterm/${profile}/session/:pid/size`, function (req, res) {
     let pid = parseInt(req.params.pid)
-    let cols = parseInt(req.query.cols)
-    let rows = parseInt(req.query.rows)
+    let cols = parseInt(req.query.cols.toString())
+    let rows = parseInt(req.query.rows.toString())
     let term = sessions[pid]
 
     if (!term) return

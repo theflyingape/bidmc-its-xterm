@@ -1,7 +1,7 @@
 Summary:	BIDMC ITS Xterm.js service
 Name:		bidmc-its-xterm
 Version:	1.3
-Release:	3%{?dist}
+Release:	5%{?dist}
 
 License:	MIT
 Source0:	xterm.tgz
@@ -11,7 +11,7 @@ Group:		Applications/Internet
 URL:		https://git.bidmc.harvard.edu/projects/CAS/repos/server/browse/opt/xterm
 Prefix:		/opt
 
-Requires:	gcc gcc-c++ rh-nodejs12-nodejs
+Requires:	gcc gcc-c++ nodejs openssl
 
 %description
 an Apache-Node.js implementation for web SSH client needs
@@ -61,6 +61,9 @@ echo
 %attr(775,root,wheel) /opt/xterm
 
 %changelog
+* Thu Sep 10 2020 Robert Hurst <rhurst@bidmc.harvard.edu>
+- rpm spec updated for RHEL 8 packaging
+- updated npm dependencies
 * Thu Feb 13 2020 Robert Hurst <rhurst@bidmc.harvard.edu>
 - node-pty          0.8.1   ->  0.9.0
 - ws                7.1.2   ->  7.2.1

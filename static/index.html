@@ -5,6 +5,10 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <link rel="manifest" href="manifest.json">
+<link rel="preload" href="notoemoji.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="notomono.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="vt220.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<meta charset="UTF-8">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,8 +17,16 @@
 <!--meta name="msapplication-starturl" content="https://xterm.bidmc.harvard.edu/xterm/mycroft/"-->
 <style type='text/css'>
   @font-face {
+    font-family: 'notomono';
+    src: url('notomono.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'notoemoji';
+    src: url('notoemoji.woff2') format('woff2');
+  }
+  @font-face {
     font-family: tty;
-    src: url('vt220.woff2');
+    src: url('vt220.woff2') format('woff2');
   }
   body {
     color: white;
@@ -41,7 +53,7 @@
 </style>
 <link rel="stylesheet" href="xterm.css" />
 </head>
-<body bgColor="#010208">
+<body bgColor="#010208" onload="window.dispatchEvent(new Event('resize'));">
 <div id="terminal"></div>
 <div id="wall" hidden=true>
   <span style="text-align:center;"><p>

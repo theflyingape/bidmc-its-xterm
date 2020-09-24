@@ -19,7 +19,7 @@ fi
 NODEJS=$( dirname "`which node 2> /dev/null`" )
 [ "${NODEJS}" = "." ] && NODEJS=/opt/rh/rh-nodejs12/root/usr/bin
 if [ ! -f $NODEJS/node ]; then
-	sudo yum install gcc gcc-c++ rh-nodejs12-nodejs
+	sudo yum install gcc gcc-c++ openssl nodejs
 	[ -n "$http_proxy" ] && $NODEJS/npm config set proxy=$http_proxy
 	[ -n "$https_proxy" ] && $NODEJS/npm config set https-proxy=$https_proxy
 fi
@@ -57,6 +57,7 @@ $NODEJS/npm install
 echo
 echo "Construct your its/server needs and enable startup service(s), i.e.,"
 echo "# sudo cp xterm-its@.service /etc/systemd/system/"
+echo "# sudo systemctl daemon-reload"
 for folder in $domain/*; do
 	server=${folder#${domain}/*}
 	profile="${domain}@${server}"
