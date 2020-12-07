@@ -22,7 +22,7 @@ interface client extends ITerminalOptions {
     title?: string
     bgColor?: string
     keymap?: [{
-        keyCode: number
+        key: string
         shiftKey: boolean
         mapCode: number
     }]
@@ -60,15 +60,15 @@ window.onresize = () => {
     if (!pid || !term) return
 
     let t: CSSStyleRule
-	let stylesheet = <CSSStyleSheet>document.styleSheets[0]
+    let stylesheet = <CSSStyleSheet>document.styleSheets[0]
     for (let i in stylesheet.cssRules) {
-		let css: CSSStyleRule = <any>stylesheet.cssRules[i]
+        let css: CSSStyleRule = <any>stylesheet.cssRules[i]
         if (css.selectorText === '#terminal')
             t = css
     }
 
-    Object.assign(t.style, { 'top':'0px', 'left': '0px', 'height':`${window.innerHeight}px`, 'width':`${window.innerWidth}px` })
-//  autocompute resize ROWSxCOLS to fullwindow and notify backend app
+    Object.assign(t.style, { 'top': '0px', 'left': '0px', 'height': `${window.innerHeight}px`, 'width': `${window.innerWidth}px` })
+    //  autocompute resize ROWSxCOLS to fullwindow and notify backend app
     if (flexible) {
         if (fontSize) term.setOption('fontSize', fontSize)
         fit.fit()
@@ -76,7 +76,7 @@ window.onresize = () => {
         return
     }
 
-//  client has a targeted ROWSxCOLS goal, adjust terminal within browser window
+    //  client has a targeted ROWSxCOLS goal, adjust terminal within browser window
     term.setOption('fontSize', 20)
     let xy = fit.proposeDimensions()
     let w = Math.trunc(20 * xy.cols / (options.cols || xy.cols))
@@ -84,12 +84,12 @@ window.onresize = () => {
     term.setOption('fontSize', h < w ? h : w)
     xy = fit.proposeDimensions()
 
-//  make it stick
+    //  make it stick
     term.resize(options.cols || xy.cols, options.rows || xy.rows)
     term.scrollToBottom()
     centerize()
 
-//  menterize terminal's canvas within browser window
+    //  menterize terminal's canvas within browser window
     function centerize() {
         let xvp: CSSStyleRule = <any>document.getElementsByClassName('xterm-viewport')[0]
         let xt = document.getElementsByClassName('xterm-screen')[0]
@@ -98,9 +98,9 @@ window.onresize = () => {
         if ((<any>term).viewport) sb = (<any>term).viewport.scrollBarWidth
         let th = xt.clientHeight
         let tw = xt.clientWidth
-        let tt = (window.innerHeight - th) >>1
-        let tl = (window.innerWidth - tw) >>1
-        Object.assign(t.style, { 'top':`${tt}px`, 'left':`${tl}px`, 'height':`${th}px`, 'width':`${tw}px` })
+        let tt = (window.innerHeight - th) >> 1
+        let tl = (window.innerWidth - tw) >> 1
+        Object.assign(t.style, { 'top': `${tt}px`, 'left': `${tl}px`, 'height': `${th}px`, 'width': `${tw}px` })
         //  expand viewport (with scroll area) to match screen/canvas, else it covers the scrollbar
         xvp.style.width = `${tw + sb}px`
     }
@@ -108,9 +108,9 @@ window.onresize = () => {
 
 //  allow for URL to manually set geometry/font requirements
 function parseStartup(queryString: string) {
-    let params = { cols:0, rows:0, size:0 }, queries, temp, i, l
+    let params = { cols: 0, rows: 0, size: 0 }, queries, temp, i, l
     queries = queryString.replace(/^\?/, "").split("&")
-    for (i = 0, l = queries.length; i < l; i++ ) {
+    for (i = 0, l = queries.length; i < l; i++) {
         temp = queries[i].split('=')
         params[temp[0]] = parseInt(temp[1])
     }
@@ -128,13 +128,13 @@ function newSession() {
     term.loadAddon(fit)
 
     term.onData(data => {
-		if (pid) socket.send(data)
-		else {
-			term.dispose()
-			if (data == '\r' || data == ' ')
-				newSession()
-		}
-	})
+        if (pid) socket.send(data)
+        else {
+            term.dispose()
+            if (data == '\r' || data == ' ')
+                newSession()
+        }
+    })
 
     term.onResize(size => {
         cols = size.cols
@@ -198,11 +198,13 @@ function newSession() {
 
             if (options.keymap && options.keymap.length)
                 term.attachCustomKeyEventHandler(function (ev) {
-                    for (let i in options.keymap)
-                        if (options.keymap[i].keyCode == ev.keyCode && options.keymap[i].shiftKey == ev.shiftKey) {
-                            socket.send(String.fromCharCode(options.keymap[i].mapCode))
-                            return false
-                        }
+                    if (ev.type == 'keydown') {
+                        for (let i in options.keymap)
+                            if (options.keymap[i].key == ev.key && options.keymap[i].shiftKey == ev.shiftKey) {
+                                socket.send(String.fromCharCode(options.keymap[i].mapCode))
+                                return false
+                            }
+                    }
                 })
 
             socket.onmessage = function (ev) {
@@ -253,12 +255,12 @@ const PRODUCT_ID = 0x3a0e
 async () => {
 
     navigator.usb.getDevices()
-    .then(devices => {
-      console.log("Total devices: " + devices.length)
-      devices.forEach(device => {
-        console.log("Product name: " + device.productName + ", serial number " + device.serialNumber)
-      })
-    })
+        .then(devices => {
+            console.log("Total devices: " + devices.length)
+            devices.forEach(device => {
+                console.log("Product name: " + device.productName + ", serial number " + device.serialNumber)
+            })
+        })
 
     try {
         device = await navigator.usb.requestDevice({

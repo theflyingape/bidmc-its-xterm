@@ -1,8 +1,24 @@
 {
   "bgColor": "#102040",
-  "cols": 100, "scrollback": 1000,
+  "cols": 100,
+  "scrollback": 1000,
   "fontFamily": "notomono,notoemoji,Consolas,monospace",
-  "theme": {  "foreground": "#c1c2c8", "background": "#010204" },
+  "theme": {
+    "foreground": "#c1c2c8",
+    "background": "#010204"
+  },
   "timeout": 10,
-  "wall": "<hr><h3>BIDMC ITS Xterm.js services 🐧</h3><pre>an Apache-NodeJs implementation for web SSH client needs</pre>"
+  "wall": "<hr><h3>BIDMC ITS Xterm.js services 🐧</h3><pre>an Apache-NodeJs implementation for web SSH client needs</pre>",
+  "keymap": [
+    {
+      "key": "Backspace",
+      "shiftKey": false,
+      "mapCode": 8
+    },
+    {
+      "key": "Backspace",
+      "shiftKey": true,
+      "mapCode": 127
+    }
+  ]
 }

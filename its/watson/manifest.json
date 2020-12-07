@@ -2,8 +2,8 @@
   "name": "CCC Classic (DEV)",
   "short_name": "WATSON",
   "lang": "en-US",
-  "start_url": "https://cassiopeia.bidmc.harvard.edu/xterm/its@watson/",
-  "version": "2018.2.13",
+  "start_url": "https://xterm-dev.bidmc.org",
+  "version": "2020.12.07",
   "display": "fullscreen",
   "orientation": "portrait",
   "icons": [

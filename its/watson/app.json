@@ -3,7 +3,7 @@
   "cmd":"su",
   "params": [ "cacheusr", "/var/local/cacheusr/bin/logins.sh", "watson" ],
   "pty": { "term":"linux", "cols":80, "rows":25, "cwd":"" },
-  "host":"localhost", "port":8022,
+  "host":"0.0.0.0", "port":8022,
   "sslKey":"./keys/localhost.key", "sslCert":"./keys/localhost.crt",
   "static":"./static",
   "loglevel":5

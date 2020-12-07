@@ -16,14 +16,14 @@ for folder in $domain/*; do
 	log="logs/${server}.log"
 	profile="${domain}@${server}"
 
-	echo -n "xterm-${server} --> "
+	echo -en "\e[1;31mxterm-${server}\e[m --> "
 
 	job=`pidof xterm-${server}`
 	if [ -n "$job" ]; then
 		echo $job
 		sudo kill $job 2> /dev/null
 		sleep 0.25
-		tail -2 "${log}"
+		tail -3 "${log}"
 	fi
 
 	echo -n "starting "
@@ -31,9 +31,10 @@ for folder in $domain/*; do
 	${NODE} ${APP} "$profile" >& "${log}" &
 	sleep 0.5
 	job=`pidof xterm-${server}` && echo $job || echo "error"
-	tail -2 "${log}"
+	tail -3 "${log}"
+	echo
 
 done
 
-#cat logs/*.log		# service startup issue
-#sudo netstat -pant | grep xterm | grep its@	# running xterm services
+ss -ltnp
+journalctl -efqn 5 | grep ' xterm-'
