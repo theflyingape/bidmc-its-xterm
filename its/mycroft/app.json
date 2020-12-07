@@ -3,7 +3,7 @@
   "cmd":"su",
   "params": [ "cacheusr", "/var/local/cacheusr/bin/logins.sh", "mycroft" ],
   "pty": { "term":"linux", "cols":80, "rows":25, "cwd":"" },
-  "host":"127.0.0.1", "port":8222,
+  "host":"0.0.0.0", "port":8222,
   "sslKey":"./keys/localhost.key", "sslCert":"./keys/localhost.crt",
   "static":"./static"
 }

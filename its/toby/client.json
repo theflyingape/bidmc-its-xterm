@@ -11,7 +11,7 @@
         "brightBlue": "#0000fa", "brightMagenta": "#fa00fa", "brightCyan": "#00fafa"
     },
     "keymap": [
-        { "key": "Backspace", "shiftKey": false, "mapCode": 8 },
-        { "key": "Backspace", "shiftKey": true, "mapCode": 127 }
+        { "key": "Backspace", "shiftKey": false, "mapCode": 127 },
+        { "key": "Backspace", "shiftKey": true, "mapCode": 8 }
     ]
 }
