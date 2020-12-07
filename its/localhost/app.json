@@ -1,10 +1,22 @@
 {
-  "profile":"its@localhost",
-  "cmd":"sh",
-  "params": [ "-c", "echo -n \"Username: \" && read -t 30 who && ssh ${who}@`hostname -s`" ],
-  "pty": { "term":"xterm-256color", "cols":80, "rows":25, "cwd":"", "env":"" },
-  "host":"127.0.0.1", "port":2222,
-  "sslKey":"./keys/localhost.key", "sslCert":"./keys/localhost.crt",
-  "static":"./static",
-  "loglevel":7
+  "profile": "its@localhost",
+  "cmd": "bash",
+  "params": [
+    "-c",
+    "echo -n \"Username: \" && read -t 30 who && ssh ${who}@`hostname -s`"
+  ],
+  "pty": {
+    "term": "xterm-256color",
+    "cols": 80,
+    "rows": 25,
+    "cwd": "",
+    "env": ""
+  },
+  "host": "127.0.0.1",
+  "port": 2222,
+  "sslCert": "./keys/localhost.crt",
+  "sslKey": "./keys/localhost.key",
+  "sslFallback": true,
+  "static": "./static",
+  "loglevel": 7
 }

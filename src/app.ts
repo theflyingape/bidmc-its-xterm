@@ -5,6 +5,7 @@
 import dns = require('dns')
 import express = require('express')
 import fs = require('fs')
+import http = require('http')
 import https = require('https')
 import os = require('os')
 import path = require('path')
@@ -31,6 +32,7 @@ interface config {
   port: number
   sslKey?: string
   sslCert?: string
+  sslFallback?: boolean
   static?: string
 }
 
@@ -42,6 +44,7 @@ interface client extends ITerminalOptions {
 let profile = process.argv.length > 2 ? process.argv[2] : 'its@localhost'
 let folder = profile.split('@').join('/')
 let xterm = folder.split('/').splice(-1)[0].split('.')[0]
+process.title = `xterm-${xterm}`
 
 console.log('*'.repeat(80))
 console.log(`Node.js ${process.version} BIDMC ITS Xterm service using profile: ${profile}`)
@@ -83,11 +86,11 @@ if (!config.pty) {
 
 export let host: string = config.host || 'localhost'
 export let port: number = config.port || 2222
-if (!config.sslKey) {
+
+if (!config.sslKey && !config.sslFallback) {
   console.log('?FATAL: missing sslKey/sslCert filename pair')
   process.exit()
 }
-export let ssl = { key: fs.readFileSync(config.sslKey), cert: fs.readFileSync(config.sslCert) }
 
 if (!config.static)
   config.static = './static'
@@ -98,18 +101,36 @@ var sessions = {} //, logs = {}
 dns.lookup(config.host, (err, addr, family) => {
   const app = express()
   app.set('trust proxy', ['loopback', addr])
-  let server = https.createServer(ssl, app)
 
-  process.title = `xterm-${xterm}`
+  let server, ssl
+  try {
+    ssl = { cert: fs.readFileSync(config.sslCert), key: fs.readFileSync(config.sslKey) }
+    server = https.createServer(ssl, app)
+  }
+  catch (err) {
+    console.log(`SSL error: \t${err.message}`)
+    console.log(`SSL fallback: \t${config.sslFallback}`)
+    if (config.sslFallback) {
+      server = http.createServer(app)
+      //  is this on a Chrome Desktop (sftp/2222)?
+      if (port == 2222 && os.hostname() == 'penguin') {
+        config.params = [ '-l' ]
+        port = 8080
+      }
+    }
+    else
+      process.exit()
+  }
+
   console.log(`process:\t${process.title} [${process.pid}]`)
 
   server.listen(port, host)
-  console.log(` + listening on https://${host}:${port}/xterm/${profile}/`)
+  console.log(` + listening on http${ssl ? 's' : ''}://${host}:${port}/xterm/${profile}/`)
   console.log(` + serving up:\t${config.cmd} ${config.params.join(' ')}`)
   console.log('*'.repeat(80))
   syslog.open(process.title)
   syslog.upto(+config.loglevel)
-  syslog.note(`listening on https://${host}:${port}/xterm/${profile}/`)
+  syslog.note(`listening on http${ssl ? 's' : ''}://${host}:${port}/xterm/${profile}/`)
   syslog.note(`serving up '${config.cmd} ${config.params.join(' ')}'`)
 
   //  enable WebSocket endpoints

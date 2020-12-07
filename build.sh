@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # transpile into the server-side middleware app
 # and bundle for the client-side browser

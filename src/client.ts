@@ -244,3 +244,33 @@ function checkCarrier() {
 }
 
 newSession()
+
+//  USB?
+let device
+const VENDOR_ID = 0x1c8a
+const PRODUCT_ID = 0x3a0e
+
+async () => {
+
+    navigator.usb.getDevices()
+    .then(devices => {
+      console.log("Total devices: " + devices.length)
+      devices.forEach(device => {
+        console.log("Product name: " + device.productName + ", serial number " + device.serialNumber)
+      })
+    })
+
+    try {
+        device = await navigator.usb.requestDevice({
+            filters: [{
+                vendorId: VENDOR_ID,
+                productId: PRODUCT_ID
+            }]
+        })
+        await device.open()
+        console.log("device", device)
+    } catch (error) {
+        console.log(error)
+    }
+    await device.close()
+}

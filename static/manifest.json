@@ -9,5 +9,8 @@
     {
       "src": "xterm-js.png"
     }
-  ]
+  ],
+  "permissions": [
+      "usb"
+   ]
 }
