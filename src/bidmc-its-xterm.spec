@@ -1,7 +1,7 @@
 Summary:	BIDMC ITS Xterm.js service
 Name:		bidmc-its-xterm
 Version:	1.3
-Release:	5%{?dist}
+Release:	8%{?dist}
 
 License:	MIT
 Source0:	xterm.tgz
@@ -61,6 +61,10 @@ echo
 %attr(775,root,wheel) /opt/xterm
 
 %changelog
+* Mon Dec 07 2020 Robert Hurst <rhurst@bidmc.harvard.edu>
+- corrections for XTerm custom keyboard handler
+* Thu Sep 24 2020 Robert Hurst <rhurst@bidmc.harvard.edu>
+- rpm spec updated for RHEL 8 node.js, fixes
 * Thu Sep 10 2020 Robert Hurst <rhurst@bidmc.harvard.edu>
 - rpm spec updated for RHEL 8 packaging
 - updated npm dependencies
