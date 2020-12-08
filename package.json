@@ -1,6 +1,6 @@
 {
   "name": "bidmc-its-xterm",
-  "version": "2020.12.07",
+  "version": "2020.12.08",
   "description": "BIDMC ITS Xterm.js services 🖥",
   "main": "app",
   "author": "Robert Hurst",
@@ -20,7 +20,7 @@
   },
   "homepage": "https://xterm.bidmc.harvard.edu/xterm/its@mycroft/",
   "engines": {
-    "node": ">=12.12"
+    "node": ">=14.15"
   },
   "scripts": {
     "build": "echo 'run script: ./build.sh or ./build.sh rpm'",
