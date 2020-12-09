@@ -87,6 +87,12 @@ if (!config.pty) {
 export let host: string = config.host || 'localhost'
 export let port: number = config.port || 2222
 
+//  is this on a Chrome Desktop (sftp/2222)?
+if (port == 2222 && os.hostname() == 'penguin') {
+    config.params = ['-l']
+    port = 8080
+}
+
 if (!config.sslKey && !config.sslFallback) {
     console.log('?FATAL: missing sslKey/sslCert filename pair')
     process.exit()
@@ -110,14 +116,8 @@ dns.lookup(config.host, (err, addr, family) => {
     catch (err) {
         console.log(`SSL error: \t${err.message}`)
         console.log(`SSL fallback: \t${config.sslFallback}`)
-        if (config.sslFallback) {
+        if (config.sslFallback)
             server = http.createServer(app)
-            //  is this on a Chrome Desktop (sftp/2222)?
-            if (port == 2222 && os.hostname() == 'penguin') {
-                config.params = ['-l']
-                port = 8080
-            }
-        }
         else
             process.exit()
     }

@@ -2,7 +2,7 @@
   "name": "BIDMC ITS xterm.js",
   "short_name": "xterm",
   "lang": "en-US",
-  "start_url": "https://localhost:2222/xterm/its@localhost",
+  "start_url": "https://localhost:8080/xterm/its@localhost/",
   "display": "fullscreen",
   "orientation": "landscape",
   "icons": [
