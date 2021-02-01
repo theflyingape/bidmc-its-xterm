@@ -21,4 +21,4 @@ Create a new instance in the **its** folder. Each instance has an **app.json** (
 
 > node.js bindings to fork processes with pseudoterminal file descriptors. It returns a terminal object which allows reads and writes.
 
-:us: :copyright: 2018-2020 [Robert Hurst](https://www.linkedin.com/in/roberthurstrius/)
+:us: :copyright: 2018-2021 [Robert Hurst](https://www.linkedin.com/in/roberthurstrius/)
