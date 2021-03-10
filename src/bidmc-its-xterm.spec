@@ -1,7 +1,7 @@
 Summary:	BIDMC ITS Xterm.js service
 Name:		bidmc-its-xterm
-Version:	1.3
-Release:	10%{?dist}
+Version:	1.4
+Release:	0%{?dist}
 
 License:	MIT
 Source0:	xterm.tgz
@@ -61,6 +61,9 @@ echo
 %attr(775,root,wheel) /opt/xterm
 
 %changelog
+* Wed Mar 10 2021 Robert Hurst <rhurst@bidmc.harvard.edu>
+- corrections for xterm 4.11 and node-pty 0.10.0
+- added restart on failure (that never happens) to systemctl 
 * Wed Dec 09 2020 Robert Hurst <rhurst@bidmc.harvard.edu>
 - corrections for Node.js 14 and xterm 4.9 with supporting node modules
 * Mon Dec 07 2020 Robert Hurst <rhurst@bidmc.harvard.edu>
