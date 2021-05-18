@@ -61,6 +61,9 @@ echo
 %attr(775,root,wheel) /opt/xterm
 
 %changelog
+* Tue May 18 2021 Robert Hurst <rhurst@bidmc.harvard.edu>
+- upgraded for xterm 4.12 and node-pty 0.10.1
+-  
 * Wed Mar 10 2021 Robert Hurst <rhurst@bidmc.harvard.edu>
 - corrections for xterm 4.11 and node-pty 0.10.0
 - added restart on failure (that never happens) to systemctl 
