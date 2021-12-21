@@ -28,11 +28,11 @@
     "test": "./test.sh"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.2",
     "modern-syslog": "^1.2.0",
     "node-pty": "^0.10.1",
-    "ws": "^8.2.3",
-    "xterm": "^4.14.1",
+    "ws": "^8.4.0",
+    "xterm": "^4.15.0",
     "xterm-addon-fit": "^0.5.0",
     "xterm-addon-unicode11": "^0.3.0",
     "xterm-addon-web-links": "^0.4.0"

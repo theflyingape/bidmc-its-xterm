@@ -1,9 +1,11 @@
-version: '2.1'
+version: '3.4'
 
 services:
   bidmc-its-xterm:
     image: bidmc-its-xterm
-    build: .
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     environment:
       NODE_ENV: production
     ports:

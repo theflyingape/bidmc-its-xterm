@@ -53,7 +53,7 @@ let term: Terminal
 // if user returns to a closed session window, refresh
 window.onfocus = () => {
     if (pid) return
-    window.location.reload(true)
+    window.location.reload()
 }
 
 window.onresize = () => {
